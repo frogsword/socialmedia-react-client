@@ -1,30 +1,16 @@
-import { useState, useEffect } from "react"
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Login from "./pages/Login";
+import Home from "./pages/Home";
 
 function App() {
-    const [tweets, setTweets] = useState([])
-
-    useEffect(() => {
-        fetch("http://localhost:8080/api/tweets/user/664a34bcf100de72da456679", {
-            method: 'get',
-            mode: 'cors',
-            credentials: 'include'
-        })
-        .then((res) => res.json())
-        .then((res) => setTweets(res))
-    }, [])
-
-  return (
-    <>
-        {tweets.map(function(tweet) {
-      return (
-        <div key={tweet.id}>
-          <div>{tweet.body}</div>
-          <img src={"data:image/jpeg;base64," + tweet.image}></img>
-        </div>
-      )
-    })}
-    </>
-  )
+    return (
+        <BrowserRouter>
+            <Routes>
+                <Route path="/" element={<Home />}></Route>
+                <Route path="/login" element={<Login />}></Route>
+            </Routes>
+        </BrowserRouter>
+    )
 }
 
 export default App
