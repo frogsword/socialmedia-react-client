@@ -1,5 +1,6 @@
 import { useState } from "react"
-import { Input, Stack,   FormControl, FormErrorMessage, Button, Spinner } from '@chakra-ui/react'
+import { Input, Stack, FormControl, FormErrorMessage, Button, Spinner } from '@chakra-ui/react'
+import { useNavigate } from "react-router-dom";
 
 function Login() {
     const [email, setEmail] = useState("")
@@ -7,6 +8,7 @@ function Login() {
     const [isError, setIsError] = useState(false)
     const [errMsg, setErrMsg] = useState("")
     const [loading, setLoading] = useState(false)
+    const navigate = useNavigate()
 
     async function handleSubmit() {
         if (email === '' || password === '') {
@@ -37,12 +39,11 @@ function Login() {
                 },
                 body: JSON.stringify({email, password}) 
             })
-
-            setEmail("")
-            setPassword("")
-            setErrMsg("")
-            setIsError(false)
-            setLoading(false)
+            .then(() => {
+                setIsError(false)
+                setLoading(false)
+                navigate("/")
+            })
         }
     }
     

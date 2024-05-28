@@ -1,7 +1,27 @@
+import { useContext, useEffect, useState } from "react"
+import { AuthContext } from "../context/auth-context"
+
 function Home() {
+    const { authenticateUser } = useContext(AuthContext)
+
+    const [user, setUser] = useState({})
+
+    useEffect(() => {
+        async function authenticate() {
+            const res = await authenticateUser()
+            setUser(res)
+        }
+        authenticate()
+    }, [])
+
     return (
         <>
-            <div>Home</div>
+            {user && (
+                <div>{user.email}</div>
+            )}
+            {!user && (
+                <div>Please log in</div>
+            )}
         </>
     )
 }
