@@ -1,7 +1,7 @@
-import { useEffect, useState } from "react"
-import { Link, useLocation } from "react-router-dom"
-import { Avatar } from '@chakra-ui/react'
+import {useEffect, useState} from "react"
+import {Link, useLocation} from "react-router-dom"
 import Tweet from "../components/Tweet"
+import ProfileHeader from "../components/ProfileHeader.jsx";
 
 function Profile() {
     const [profileUser, setProfileUser] = useState({})
@@ -11,8 +11,8 @@ function Profile() {
     const path = location.pathname
     const name = path.slice(9, path.length)
 
-    const getProfileTweets = async() => {
-        const response = await fetch("http://localhost:8080/api/tweets/user/"+name, {
+    const getProfileTweets = async () => {
+        const response = await fetch("http://localhost:8080/api/tweets/user/" + name, {
             method: "GET",
             mode: 'cors',
             credentials: 'include'
@@ -22,8 +22,8 @@ function Profile() {
         setProfileTweets(res)
     }
 
-    const getProfileUser = async() => {
-        const response = await fetch("http://localhost:8080/api/users/"+name, {
+    const getProfileUser = async () => {
+        const response = await fetch("http://localhost:8080/api/users/" + name, {
             method: "GET",
             mode: 'cors',
             credentials: 'include'
@@ -41,15 +41,14 @@ function Profile() {
     return (
         <div className="profile-page">
             <Link to='/'>Home</Link>
+
             {(profileUser && profileUser.name) && (
-                <>
-                    <Avatar size='2xl' src={"data:image/jpeg;base64," + profileUser.profilePicture} border='3px solid black' />
-                    <div>{profileUser.name}</div>
-                </>
+                <ProfileHeader profileUser={profileUser}/>
             )}
+
             {profileTweets.map((tweet) => {
                 return (
-                    <Tweet tweet={tweet} />
+                    <Tweet tweet={tweet}/>
                 )
             })}
         </div>
