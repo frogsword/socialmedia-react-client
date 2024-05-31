@@ -1,0 +1,44 @@
+.modal-body {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: start;
+    gap: 30px;
+}
+
+.edit-image-container {
+    position: relative;
+    text-align: center;
+    color: white;
+    width: min-content;
+}
+
+.edit-image-container:hover {
+    cursor: pointer;
+}
+
+.edit-avatar {
+    filter: brightness(80%);
+}
+
+.edit-avatar:hover {
+    transition: 0.25s;
+    filter: brightness(50%);
+}
+
+.edit-image-tag {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    height: 40%;
+    width: 40%;
+    border-radius: 30px;
+    background-color: rgba(37, 37, 37, 0.67);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 28px;
+    font-weight: 700;
+    filter: brightness(100%);
+}

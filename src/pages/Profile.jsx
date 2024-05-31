@@ -1,9 +1,12 @@
 import {useEffect, useState} from "react"
-import {Link, useLocation} from "react-router-dom"
+import {Link as ReactRouterLink, useLocation} from "react-router-dom"
+import {ArrowBackIcon} from '@chakra-ui/icons'
+import {Link as ChakraLink} from '@chakra-ui/react'
 import Tweet from "../components/Tweet"
 import ProfileHeader from "../components/ProfileHeader.jsx";
+import "../styles/profile-page.css"
 
-function Profile() {
+function Profile({currentUser}) {
     const [profileUser, setProfileUser] = useState({})
     const [profileTweets, setProfileTweets] = useState([])
 
@@ -40,17 +43,23 @@ function Profile() {
 
     return (
         <div className="profile-page">
-            <Link to='/'>Home</Link>
+            <div className="profile-main">
+                <div className='profile-nav'>
+                    <ChakraLink as={ReactRouterLink} to='/' className='nav-link-back'>
+                        <ArrowBackIcon/>
+                    </ChakraLink>
+                </div>
 
-            {(profileUser && profileUser.name) && (
-                <ProfileHeader profileUser={profileUser}/>
-            )}
+                {(profileUser && profileUser.name) && (
+                    <ProfileHeader profileUser={profileUser} currentUser={currentUser}/>
+                )}
 
-            {profileTweets.map((tweet) => {
-                return (
-                    <Tweet tweet={tweet}/>
-                )
-            })}
+                {profileTweets.map((tweet) => {
+                    return (
+                        <Tweet tweet={tweet}/>
+                    )
+                })}
+            </div>
         </div>
     )
 }

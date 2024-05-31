@@ -17,11 +17,11 @@ function Tweet({tweet}) {
                    src={"data:image/jpeg;base64," + tweet.image}/>
 
 
-            <Modal isOpen={isOpen} onClose={onClose} size='6xl' isCentered>
+            <Modal isOpen={isOpen} onClose={onClose} size='4xl' isCentered>
                 <ModalOverlay backdropFilter='blur(10px)'/>
                 <ModalContent>
-                    <Image borderRadius='10px'
-                           src={"data:image/jpeg;base64," + tweet.image}/>
+                    <Image
+                        src={"data:image/jpeg;base64," + tweet.image}/>
                 </ModalContent>
             </Modal>
         </div>

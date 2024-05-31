@@ -1,11 +1,12 @@
-import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import {useEffect, useState} from "react";
+import {Link} from "react-router-dom";
 import Tweet from "../components/Tweet";
+import "../styles/home-page.css";
 
-function Home({ user }) {
+function Home({user}) {
     const [tweets, setTweets] = useState([])
 
-    const getTweets = async() => {
+    const getTweets = async () => {
         const response = await fetch("http://localhost:8080/api/tweets/all", {
             method: "GET",
             mode: 'cors',
@@ -31,7 +32,7 @@ function Home({ user }) {
 
             {tweets.map((tweet) => {
                 return (
-                    <Tweet tweet={tweet} />
+                    <Tweet tweet={tweet}/>
                 )
             })}
         </>
