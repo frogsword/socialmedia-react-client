@@ -23,12 +23,36 @@ function EditProfile({currentUser}) {
     const profilePicture = ("data:image/jpeg;base64," + currentUser.profilePicture)
 
     const [pfp, setPfp] = useState(profilePicture);
+    const [imageFile, setImageFile] = useState(null);
     const [name, setName] = useState(currentUser.changeableName);
     const [bio, setBio] = useState(currentUser.bio);
     const [country, setCountry] = useState(currentUser.country);
     const fileUploadRef = useRef(null);
 
     const {isOpen, onOpen, onClose} = useDisclosure()
+
+    const handleSubmit = async () => {
+        const formData = new FormData()
+        formData.append("image", imageFile, pfp)
+        formData.append("changeableName", name)
+        formData.append("bio", bio)
+        formData.append("country", country)
+
+        await fetch("http://localhost:8080/api/users/profile/update", {
+            method: "PUT",
+            mode: "cors",
+            body: formData,
+            credentials: 'include'
+        })
+
+        await fetch("http://localhost:8080/api/tweets/pfp/update", {
+            method: "PATCH",
+            mode: "cors",
+            credentials: 'include'
+        })
+
+        return window.location.reload()
+    }
 
     return (
         <div className="edit-profile">
@@ -55,7 +79,10 @@ function EditProfile({currentUser}) {
                             <FormControl>
                                 <Stack spacing={3}>
                                     <Input type='file' ref={fileUploadRef}
-                                           onChange={(e) => setPfp(URL.createObjectURL(e.target.files[0]))}
+                                           onChange={(e) => {
+                                               setPfp(URL.createObjectURL(e.target.files[0]))
+                                               setImageFile(e.target.files[0])
+                                           }}
                                            size='md' hidden/>
                                     <div>
                                         <FormLabel>Name</FormLabel>
@@ -78,7 +105,7 @@ function EditProfile({currentUser}) {
                     </ModalBody>
 
                     <ModalFooter>
-                        <Button colorScheme='blue' mr={3} onClick={onClose}>
+                        <Button colorScheme='blue' mr={3} onMouseDown={onClose} onClick={() => handleSubmit()}>
                             Save
                         </Button>
                     </ModalFooter>

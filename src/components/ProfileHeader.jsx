@@ -1,8 +1,9 @@
-import {Avatar, Icon, Image, Modal, ModalContent, ModalOverlay, useDisclosure} from "@chakra-ui/react"
+import {Avatar, Button, Icon, Image, Modal, ModalContent, ModalOverlay, useDisclosure} from "@chakra-ui/react"
 import "../styles/profile-header.css"
 import {CalendarIcon} from "@chakra-ui/icons";
 import {IoLocationSharp} from "react-icons/io5";
 import EditProfile from "./EditProfile.jsx";
+import {useState} from "react";
 
 function ProfileHeader({profileUser, currentUser}) {
 
@@ -11,7 +12,20 @@ function ProfileHeader({profileUser, currentUser}) {
     const profilePicture = ("data:image/jpeg;base64," + profileUser.profilePicture)
 
     const isOwnProfile = currentUser.id === profileUser.id
-    const currentUserIsFollowingProfileUser = currentUser.following.includes(profileUser.id)
+    const [currentUserIsFollowingProfileUser, setCurrentUserIsFollowingProfileUser] = useState(currentUser.following.includes(profileUser.id))
+
+    const [followerCount, setFollowerCount] = useState(profileUser.followers.length);
+    const [followLoading, setFollowLoading] = useState(false);
+
+    const handleFollowClick = async () => {
+        await fetch(`http://localhost:8080/api/users/${profileUser.id}/follow`, {
+            method: "PUT",
+            mode: "cors",
+            credentials: 'include'
+        })
+            .then(() => setCurrentUserIsFollowingProfileUser(!currentUserIsFollowingProfileUser))
+            .then(() => setFollowLoading(false))
+    }
 
     return (
         <div className='profile-header'>
@@ -20,7 +34,24 @@ function ProfileHeader({profileUser, currentUser}) {
                 <Avatar size='2xl' src={profilePicture}
                         onClick={onOpen}/>
                 {(!currentUserIsFollowingProfileUser && !isOwnProfile) && (
-                    <button>follow</button>
+                    <Button colorScheme='blue' variant='solid' isDisabled={followLoading}
+                            onClick={() => {
+                                setFollowLoading(true)
+                                setFollowerCount(followerCount + 1);
+                                handleFollowClick();
+                            }}>
+                        Follow
+                    </Button>
+                )}
+                {(currentUserIsFollowingProfileUser && !isOwnProfile) && (
+                    <Button colorScheme='red' variant='outline' isDisabled={followLoading}
+                            onClick={() => {
+                                setFollowLoading(true)
+                                setFollowerCount(followerCount - 1);
+                                handleFollowClick();
+                            }}>
+                        Unfollow
+                    </Button>
                 )}
                 {isOwnProfile && (
                     <EditProfile currentUser={currentUser}/>
@@ -32,7 +63,7 @@ function ProfileHeader({profileUser, currentUser}) {
                 <div className='name'>@{profileUser.name}</div>
             </div>
 
-            <div>{profileUser.bio}</div>
+            <div className='bio'>{profileUser.bio}</div>
 
             <div className='date-location-info'>
                 <div>
@@ -51,7 +82,7 @@ function ProfileHeader({profileUser, currentUser}) {
                     <div className='follow-text'>following</div>
                 </div>
                 <div>
-                    <div>{profileUser.followers.length}</div>
+                    <div>{followerCount}</div>
                     <div className='follow-text'>followers</div>
                 </div>
             </div>

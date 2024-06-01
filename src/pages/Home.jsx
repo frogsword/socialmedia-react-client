@@ -1,9 +1,15 @@
-import {useEffect, useState} from "react";
-import {Link} from "react-router-dom";
+import {useContext, useEffect, useState} from "react";
+import {Link, useNavigate} from "react-router-dom";
 import Tweet from "../components/Tweet";
 import "../styles/home-page.css";
+import {AuthContext} from "../context/auth-context.jsx";
 
 function Home({user}) {
+    const navigate = useNavigate()
+    const {authenticateUser} = useContext(AuthContext)
+
+    const [currUser, setCurrUser] = useState(user)
+
     const [tweets, setTweets] = useState([])
 
     const getTweets = async () => {
@@ -18,15 +24,26 @@ function Home({user}) {
     }
 
     useEffect(() => {
+        async function authenticate() {
+            const res = await authenticateUser()
+            setCurrUser(res)
+        }
+
+        authenticate()
+
+        if (!currUser || currUser.status == 403 || currUser.status == 500) {
+            navigate("/login")
+        }
+
         getTweets()
     }, [])
 
     return (
         <>
-            {(user && !user.status) && (
-                <div>{user.email}</div>
+            {(currUser && !currUser.status) && (
+                <div>{currUser.email}</div>
             )}
-            {(!user || user.status == 403 || user.status == 500) && (
+            {(!currUser || currUser.status == 403 || currUser.status == 500) && (
                 <Link to='/login'>Please Log In</Link>
             )}
 
