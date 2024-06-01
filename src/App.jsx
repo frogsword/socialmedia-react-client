@@ -3,18 +3,15 @@ import Login from "./pages/Login";
 import Home from "./pages/Home";
 import {ChakraProvider} from "@chakra-ui/react";
 import {AuthContext} from "./context/auth-context";
-import {useContext, useEffect, useState} from "react";
+import {useContext, useEffect} from "react";
 import Profile from "./pages/Profile";
 
 function App() {
-    const {authenticateUser} = useContext(AuthContext)
-
-    const [user, setUser] = useState({})
+    const {authenticateUser, authenticatedUser} = useContext(AuthContext)
 
     useEffect(() => {
         async function authenticate() {
-            const res = await authenticateUser()
-            setUser(res)
+            await authenticateUser()
         }
 
         authenticate()
@@ -24,8 +21,8 @@ function App() {
         <ChakraProvider>
             <BrowserRouter>
                 <Routes>
-                    <Route path="/" element={<Home user={user}/>}></Route>
-                    <Route path="/profile/:name" element={<Profile currentUser={user}/>}></Route>
+                    <Route path="/" element={<Home user={authenticatedUser}/>}></Route>
+                    <Route path="/profile/:name" element={<Profile currentUser={authenticatedUser}/>}></Route>
                     <Route path="/login" element={<Login/>}></Route>
                 </Routes>
             </BrowserRouter>
