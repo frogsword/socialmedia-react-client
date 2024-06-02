@@ -17,6 +17,12 @@
     width: 100%;
 }
 
+.profile-header-avatar:hover {
+    cursor: pointer;
+    transition: 0.25s;
+    filter: brightness(80%);
+}
+
 .changeable-name {
     font-weight: 700;
     font-size: 20px;
@@ -24,11 +30,11 @@
 
 .name {
     color: gray;
-    font-size: 16px;
+    font-size: 17px;
 }
 
 .bio {
-    font-size: 16px;
+    font-size: 17px;
 }
 
 .date-location-info {

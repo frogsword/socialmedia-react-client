@@ -14,6 +14,8 @@ function Profile({currentUser}) {
     const path = location.pathname
     const name = path.slice(9, path.length)
 
+    let currentTime = new Date()
+
     const getProfileTweets = async () => {
         const response = await fetch("http://localhost:8080/api/tweets/user/" + name, {
             method: "GET",
@@ -56,7 +58,7 @@ function Profile({currentUser}) {
 
                 {profileTweets.map((tweet) => {
                     return (
-                        <Tweet tweet={tweet}/>
+                        <Tweet tweet={tweet} currentTime={currentTime} currentUser={currentUser}/>
                     )
                 })}
             </div>

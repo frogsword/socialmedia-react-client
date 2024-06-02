@@ -31,7 +31,7 @@ function ProfileHeader({profileUser, currentUser}) {
         <div className='profile-header'>
 
             <div className='profile-top-row'>
-                <Avatar size='2xl' src={profilePicture}
+                <Avatar size='2xl' src={profilePicture} className='profile-header-avatar'
                         onClick={onOpen}/>
                 {(!currentUserIsFollowingProfileUser && !isOwnProfile) && (
                     <Button colorScheme='blue' variant='solid' isDisabled={followLoading}

@@ -1,0 +1,29 @@
+.tweet-main {
+    display: flex;
+    flex-direction: row;
+    padding: 10px;
+    gap: 10px;
+    font-size: 17px;
+}
+
+.tweet-main:hover {
+    transition: 0.25s;
+    background-color: #090909;
+    cursor: pointer;
+}
+
+.tweet-right-column {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.tweet-top-row {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.tweet-middle-row > div {
+    padding-bottom: 10px;
+}
