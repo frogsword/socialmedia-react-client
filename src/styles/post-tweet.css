@@ -1,0 +1,56 @@
+.post-tweet-main {
+    padding: 10px;
+    border-bottom: 0.2px solid gray;
+    font-size: 20px;
+    display: flex;
+    gap: 20px;
+}
+
+.right-column {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.bottom-row {
+    display: flex;
+    justify-content: space-between;
+}
+
+.upload-image-container {
+    position: relative;
+    text-align: center;
+    color: white;
+    width: 100%;
+    padding-top: 10px;
+}
+
+.upload-image {
+    width: 100%;
+}
+
+.upload-image:hover {
+    transition: 0.25s;
+    filter: brightness(80%);
+}
+
+.remove-image-tag {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    height: 4vh;
+    width: 4vw;
+    border-radius: 50px;
+    background-color: rgba(26, 26, 26, 0.67);
+    top: 5%;
+    right: 5%;
+    font-size: 20px;
+    font-weight: 700;
+    filter: brightness(100%);
+}
+
+.remove-image-tag:hover {
+    background-color: rgba(51, 51, 51, 0.67);
+}

@@ -3,3 +3,50 @@
     min-width: 100vw;
     background-color: #000000;
 }
+
+.home-page {
+    width: 100vw;
+    min-height: 100vh;
+    font-size: 18px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: start;
+}
+
+.home-main {
+    width: 40%;
+    min-height: 100vh;
+    border-right: 0.2px solid gray;
+    border-left: 0.2px solid gray;
+    margin-left: 10px;
+    margin-right: 10px;
+    padding-bottom: 30%;
+}
+
+.home-create-tweet {
+    /*filler remove later*/
+    font-size: 32px;
+    font-weight: bold;
+    height: 6vh;
+    border-bottom: 0.2px solid gray;
+    padding-left: 10px;
+    padding-right: 10px;
+
+    display: flex;
+    align-items: center;
+    justify-content: start;
+}
+
+@media screen and (max-width: 1500px) {
+    .home-main {
+        width: 60%;
+    }
+}
+
+@media screen and (max-width: 1150px) {
+    .home-main {
+        width: 80%;
+    }
+}

@@ -4,6 +4,7 @@
     padding: 10px;
     gap: 10px;
     font-size: 17px;
+    border-bottom: 0.2px solid gray;
 }
 
 .tweet-main:hover {
