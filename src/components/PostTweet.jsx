@@ -11,13 +11,14 @@ function PostTweet() {
     const [imageFile, setImageFile] = useState(null);
     const [body, setBody] = useState("");
 
+    const [invalid, setInvalid] = useState(true)
     const handleSubmit = async () => {
         const formData = new FormData()
 
         //dunno if theres a better way
         if (image !== null) {
             formData.append("image", imageFile, image)
-            formData.append("body", body)
+            formData.append("body", body.trim())
 
             await fetch("http://localhost:8080/api/tweets/create/withimage", {
                 method: "POST",
@@ -39,6 +40,15 @@ function PostTweet() {
         return window.location.reload()
     }
 
+    const handleChange = (e) => {
+        setBody(e.target.value)
+        if (body.trim().length > 1) {
+            setInvalid(false)
+        } else {
+            setInvalid(true)
+        }
+    }
+
     return (
         <div className="post-tweet-main">
             <div className="right-column">
@@ -55,13 +65,14 @@ function PostTweet() {
                                size='md' hidden/>
                         <div>
                             <Textarea type="text"
+                                      isRequired
                                       size='lg'
                                       value={body}
                                       resize='vertical'
                                       variant='flushed'
                                       placeholder='Tweet Something...'
-                                      colorScheme='purple'
-                                      onChange={(e) => setBody(e.target.value)}>
+                                      _placeholder={{color: "white"}}
+                                      onChange={(e) => handleChange(e)}>
                             </Textarea>
                             <div className='upload-image-container' hidden={(image == null)}>
                                 <Image className='upload-image' borderRadius='20px'
@@ -83,7 +94,8 @@ function PostTweet() {
                                 onClick={() => fileUploadRef.current.click()}
                                 icon={<AttachmentIcon/>}/>
 
-                    <Button colorScheme='blue' mr={3} borderRadius='full' onClick={() => handleSubmit()}>
+                    <Button colorScheme='blue' mr={3} isDisabled={invalid} borderRadius='full'
+                            onClick={() => handleSubmit()}>
                         Publish Tweet
                     </Button>
                 </div>
