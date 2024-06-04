@@ -1,21 +1,9 @@
-import {
-    Avatar,
-    Button,
-    IconButton,
-    Image,
-    Menu,
-    MenuButton,
-    MenuItem,
-    MenuList,
-    Modal,
-    ModalContent,
-    ModalOverlay,
-    useDisclosure
-} from "@chakra-ui/react"
+import {Avatar, Button, Icon, Image, Modal, ModalContent, ModalOverlay, useDisclosure} from "@chakra-ui/react"
 import {Link} from "react-router-dom";
 import "../styles/tweet.css"
-import {SettingsIcon} from "@chakra-ui/icons";
 import {useState} from "react";
+import TweetOptions from "./TweetOptions.jsx";
+import {GoHeart, GoHeartFill} from "react-icons/go";
 
 function Tweet({tweet, currentTime, currentUser}) {
 
@@ -64,7 +52,8 @@ function Tweet({tweet, currentTime, currentUser}) {
 
             <div className='tweet-left-column'>
                 <Link to={`/profile/${tweet.userName}`}>
-                    <Avatar size='lg' src={"data:image/jpeg;base64," + tweet.userPfp} border='2px solid gray'/>
+                    <Avatar size='lg' src={"data:image/jpeg;base64," + tweet.userPfp}
+                            _hover={{filter: "brightness(80%)", transition: "0.25s"}}/>
                 </Link>
             </div>
 
@@ -72,22 +61,16 @@ function Tweet({tweet, currentTime, currentUser}) {
 
                 <div className='tweet-top-row'>
                     <div className='tweet-info'>
-                        <b><span>{tweet.userChangeableName} </span></b>
-                        <span style={{color: 'gray'}}> @{tweet.userName} </span>
+                        <span>
+                            <Link to={`/profile/${tweet.userName}`} className='profile-link'>
+                                <b>{tweet.userChangeableName}</b>
+                            </Link>
+                        </span>
+                        <span style={{color: 'gray'}}> @{tweet.userName}</span>
                         <span style={{color: 'gray'}}> · {timeDifferenceString} </span>
                     </div>
                     {currentUserIsAuthor && (
-                        <Menu>
-                            <MenuButton as={IconButton} className='tweet-options-button' colorScheme='gray'
-                                        variant='ghost'
-                                        _hover={{border: '1px solid gray', bg: '#1f1f1f'}}
-                                        borderRadius='full'
-                                        icon={<SettingsIcon size='lg'/>}>
-                            </MenuButton>
-                            <MenuList>
-                                <MenuItem>Delete</MenuItem>
-                            </MenuList>
-                        </Menu>
+                        <TweetOptions tweetId={tweet.id}/>
                     )}
                 </div>
 
@@ -102,21 +85,31 @@ function Tweet({tweet, currentTime, currentUser}) {
 
                 <div className='tweet-bottom-row'>
                     <Button>Reply</Button>
+
                     {tweetIsLiked && (
-                        <Button isDisabled={toggleLikeLoading}
+                        <Button variant='ghost' size='lg' borderRadius='full'
+                                leftIcon={<Icon as={GoHeartFill} size='lg'/>}
+                                isDisabled={toggleLikeLoading}
+                                style={{border: "none", color: "white"}}
+                                _hover={{border: "1px solid red", color: "red"}}
+                                _active={{border: "none", color: "white"}}
                                 onClick={() => {
                                     setLikeCount(likeCount - 1)
                                     toggleLike()
-                                }}>Unlike {likeCount}</Button>
+                                }}>{likeCount}</Button>
                     )}
                     {!tweetIsLiked && (
-                        <Button isDisabled={toggleLikeLoading}
+                        <Button variant='ghost' size='lg' borderRadius='full'
+                                leftIcon={<Icon as={GoHeart} size='lg'/>}
+                                isDisabled={toggleLikeLoading}
+                                style={{border: "none", color: "white"}}
+                                _hover={{border: "none", color: "red"}}
+                                _active={{border: "none", color: "white"}}
                                 onClick={() => {
                                     setLikeCount(likeCount + 1)
                                     toggleLike()
-                                }}>Like {likeCount}</Button>
+                                }}>{likeCount}</Button>
                     )}
-
                 </div>
 
             </div>

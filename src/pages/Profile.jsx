@@ -57,9 +57,11 @@ function Profile({currentUser}) {
                 )}
 
                 {profileTweets.map((tweet) => {
-                    return (
-                        <Tweet tweet={tweet} currentTime={currentTime} currentUser={currentUser}/>
-                    )
+                    if (!tweet.deleted) {
+                        return (
+                            <Tweet key={tweet.id} tweet={tweet} currentUser={currentUser} currentTime={currentTime}/>
+                        )
+                    }
                 })}
             </div>
         </div>

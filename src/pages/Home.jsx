@@ -3,13 +3,15 @@ import {useNavigate} from "react-router-dom";
 import Tweet from "../components/Tweet";
 import "../styles/home-page.css";
 import {AuthContext} from "../context/auth-context.jsx";
+import PostTweet from "../components/PostTweet.jsx";
 
 function Home({user}) {
     const navigate = useNavigate()
     const {authenticateUser} = useContext(AuthContext)
 
-    const [currUser, setCurrUser] = useState(user)
+    let currentTime = new Date()
 
+    const [currUser, setCurrUser] = useState(user)
     const [tweets, setTweets] = useState([])
 
     const getTweets = async () => {
@@ -26,26 +28,31 @@ function Home({user}) {
     useEffect(() => {
         async function authenticate() {
             const res = await authenticateUser()
+
+            if (!res || res.status == 403 || res.status == 500) {
+                navigate("/login")
+            }
+
             setCurrUser(res)
         }
 
         authenticate()
-
-        if (!currUser || currUser.status == 403 || currUser.status == 500) {
-            navigate("/login")
-        }
-
         getTweets()
     }, [])
 
     return (
-        <>
-            {tweets.map((tweet) => {
-                return (
-                    <Tweet key={tweet.id} tweet={tweet}/>
-                )
-            })}
-        </>
+        <div className='home-page'>
+            <div className='home-main'>
+                <PostTweet/>
+                {tweets.map((tweet) => {
+                    if (!tweet.deleted) {
+                        return (
+                            <Tweet key={tweet.id} tweet={tweet} currentUser={currUser} currentTime={currentTime}/>
+                        )
+                    }
+                })}
+            </div>
+        </div>
     )
 }
 

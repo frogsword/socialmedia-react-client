@@ -9,7 +9,7 @@
 
 .tweet-main:hover {
     transition: 0.25s;
-    background-color: #090909;
+    background-color: #121212;
     cursor: pointer;
 }
 
@@ -27,4 +27,10 @@
 
 .tweet-middle-row > div {
     padding-bottom: 10px;
+}
+
+.profile-link:hover {
+    text-decoration: underline;
+    text-decoration-thickness: 2px;
+    color: white;
 }
