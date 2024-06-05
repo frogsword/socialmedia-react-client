@@ -1,12 +1,13 @@
 import {Avatar, Button, Icon, Image, Modal, ModalContent, ModalOverlay, useDisclosure} from "@chakra-ui/react"
-import {Link} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import "../styles/tweet.css"
 import {useState} from "react";
 import TweetOptions from "./TweetOptions.jsx";
 import {GoHeart, GoHeartFill} from "react-icons/go";
+import {FaRegComment} from "react-icons/fa";
 
 function Tweet({tweet, currentTime, currentUser}) {
-
+    const navigate = useNavigate()
     const {isOpen, onOpen, onClose} = useDisclosure()
 
     const currentUserIsAuthor = currentUser.id == tweet.userId
@@ -32,7 +33,6 @@ function Tweet({tweet, currentTime, currentUser}) {
         timeDifferenceString = `${timeDifference} min`
     }
 
-
     const [tweetIsLiked, setTweetIsLiked] = useState(currentUser.likedTweets.includes(tweet.id))
     const [toggleLikeLoading, setToggleLikeLoading] = useState(false)
     const [likeCount, setLikeCount] = useState(tweet.likeCount)
@@ -47,11 +47,20 @@ function Tweet({tweet, currentTime, currentUser}) {
             .then(() => setToggleLikeLoading(false))
     }
 
+    const navigateToThread = (id) => {
+        return navigate("/thread/" + id)
+    }
+
     return (
-        <div id={tweet.id} className="tweet-main">
+        <div id={tweet.id} className="tweet-main" onClick={() => {
+            navigateToThread(tweet.id)
+        }}>
 
             <div className='tweet-left-column'>
-                <Link to={`/profile/${tweet.userName}`}>
+                <Link to={`/profile/${tweet.userName}`} onClick={(e) => {
+                    e.stopPropagation()
+                    return navigate(`/profile/${tweet.userName}`)
+                }}>
                     <Avatar size='lg' src={"data:image/jpeg;base64," + tweet.userPfp}
                             _hover={{filter: "brightness(80%)", transition: "0.25s"}}/>
                 </Link>
@@ -62,7 +71,10 @@ function Tweet({tweet, currentTime, currentUser}) {
                 <div className='tweet-top-row'>
                     <div className='tweet-info'>
                         <span>
-                            <Link to={`/profile/${tweet.userName}`} className='profile-link'>
+                            <Link to={`/profile/${tweet.userName}`} className='profile-link' onClick={(e) => {
+                                e.stopPropagation()
+                                return navigate(`/profile/${tweet.userName}`)
+                            }}>
                                 <b>{tweet.userChangeableName}</b>
                             </Link>
                         </span>
@@ -77,35 +89,48 @@ function Tweet({tweet, currentTime, currentUser}) {
                 <div className='tweet-middle-row'>
                     <div>{tweet.body}</div>
                     {tweet.image && (
-                        <Image height='350px' borderRadius='20px' border='1px solid gray' onClick={onOpen}
+                        <Image height='350px' borderRadius='20px' border='1px solid gray' onClick={(e) => {
+                            onOpen()
+                            e.stopPropagation()
+                        }}
                                src={"data:image/jpeg;base64," + tweet.image}/>
                     )}
                 </div>
 
 
                 <div className='tweet-bottom-row'>
-                    <Button>Reply</Button>
+                    <Button className='bottom-row-button'
+                            variant='ghost' size='lg' borderRadius='full'
+                            leftIcon={<Icon as={FaRegComment} size='lg'/>}
+                            isDisabled={toggleLikeLoading}
+                            style={{border: "none", color: "white"}}
+                            _active={{border: "none", color: "white"}}
+                            onClick={() => {
+                                navigateToThread(tweet.id)
+                            }}>{tweet.replyCount}</Button>
 
                     {tweetIsLiked && (
-                        <Button variant='ghost' size='lg' borderRadius='full'
+                        <Button className="bottom-row-button"
+                                variant='ghost' size='lg' borderRadius='full'
                                 leftIcon={<Icon as={GoHeartFill} size='lg'/>}
                                 isDisabled={toggleLikeLoading}
                                 style={{border: "none", color: "white"}}
-                                _hover={{border: "1px solid red", color: "red"}}
                                 _active={{border: "none", color: "white"}}
-                                onClick={() => {
+                                onClick={(e) => {
+                                    e.stopPropagation()
                                     setLikeCount(likeCount - 1)
                                     toggleLike()
                                 }}>{likeCount}</Button>
                     )}
                     {!tweetIsLiked && (
-                        <Button variant='ghost' size='lg' borderRadius='full'
+                        <Button className="bottom-row-button"
+                                variant='ghost' size='lg' borderRadius='full'
                                 leftIcon={<Icon as={GoHeart} size='lg'/>}
                                 isDisabled={toggleLikeLoading}
                                 style={{border: "none", color: "white"}}
-                                _hover={{border: "none", color: "red"}}
                                 _active={{border: "none", color: "white"}}
-                                onClick={() => {
+                                onClick={(e) => {
+                                    e.stopPropagation()
                                     setLikeCount(likeCount + 1)
                                     toggleLike()
                                 }}>{likeCount}</Button>

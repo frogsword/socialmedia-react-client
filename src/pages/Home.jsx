@@ -43,7 +43,7 @@ function Home({user}) {
     return (
         <div className='home-page'>
             <div className='home-main'>
-                <PostTweet/>
+                <PostTweet message={"Tweet Something..."}/>
                 {tweets.map((tweet) => {
                     if (!tweet.deleted) {
                         return (

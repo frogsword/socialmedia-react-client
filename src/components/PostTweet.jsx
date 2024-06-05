@@ -3,7 +3,7 @@ import {useRef, useState} from "react";
 import "../styles/post-tweet.css"
 import {AttachmentIcon, CloseIcon} from "@chakra-ui/icons";
 
-function PostTweet() {
+function PostTweet({message, parentId}) {
 
     const fileUploadRef = useRef(null);
 
@@ -16,33 +16,56 @@ function PostTweet() {
         const formData = new FormData()
 
         //dunno if theres a better way
-        if (image !== null) {
-            formData.append("image", imageFile, image)
-            formData.append("body", body.trim())
+        if (message === "Tweet Something...") {
+            if (image !== null) {
+                formData.append("image", imageFile, image)
+                formData.append("body", body.trim())
 
-            await fetch("http://localhost:8080/api/tweets/create/withimage", {
-                method: "POST",
-                mode: "cors",
-                body: formData,
-                credentials: 'include'
-            })
-        } else {
-            formData.append("body", body)
+                await fetch("http://localhost:8080/api/tweets/create/withimage", {
+                    method: "POST",
+                    mode: "cors",
+                    body: formData,
+                    credentials: 'include'
+                })
+            } else {
+                formData.append("body", body)
 
-            await fetch("http://localhost:8080/api/tweets/create/noimage", {
-                method: "POST",
-                mode: "cors",
-                body: formData,
-                credentials: 'include'
-            })
+                await fetch("http://localhost:8080/api/tweets/create/noimage", {
+                    method: "POST",
+                    mode: "cors",
+                    body: formData,
+                    credentials: 'include'
+                })
+            }
+        } else if (message === "Reply...") {
+            if (image !== null) {
+                formData.append("image", imageFile, image)
+                formData.append("body", body.trim())
+
+                await fetch(`http://localhost:8080/api/tweets/${parentId}/reply/withimage`, {
+                    method: "POST",
+                    mode: "cors",
+                    body: formData,
+                    credentials: 'include'
+                })
+            } else {
+                formData.append("body", body)
+
+                await fetch(`http://localhost:8080/api/tweets/${parentId}/reply/noimage`, {
+                    method: "POST",
+                    mode: "cors",
+                    body: formData,
+                    credentials: 'include'
+                })
+            }
         }
 
         return window.location.reload()
     }
 
     const handleChange = (e) => {
-        setBody(e.target.value)
-        if (body.trim().length > 1) {
+        setBody(e)
+        if (body.trim().length > 1 || e.trim().length > 1) {
             setInvalid(false)
         } else {
             setInvalid(true)
@@ -59,7 +82,7 @@ function PostTweet() {
                                    if (e.target.files[0].type === "image/jpeg") {
                                        setImage(URL.createObjectURL(e.target.files[0]))
                                        setImageFile(e.target.files[0])
-                                       console.log(URL.createObjectURL(e.target.files[0]))
+                                       handleChange()
                                    }
                                }}
                                size='md' hidden/>
@@ -70,9 +93,9 @@ function PostTweet() {
                                       value={body}
                                       resize='vertical'
                                       variant='flushed'
-                                      placeholder='Tweet Something...'
+                                      placeholder={message}
                                       _placeholder={{color: "white"}}
-                                      onChange={(e) => handleChange(e)}>
+                                      onChange={(e) => handleChange(e.target.value)}>
                             </Textarea>
                             <div className='upload-image-container' hidden={(image == null)}>
                                 <Image className='upload-image' borderRadius='20px'

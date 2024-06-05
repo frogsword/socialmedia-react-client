@@ -20,7 +20,8 @@ function TweetOptions({tweetId}) {
         <>
             <Menu placement='right'>
                 <MenuButton as={Button} colorScheme='blackAlpha' style={{color: "white", borderRadius: "50px"}}
-                            _hover={{border: "1px solid white"}}>
+                            _hover={{border: "1px solid white"}}
+                            onClick={(e) => e.stopPropagation()}>
                     <b>· · ·</b>
                 </MenuButton>
                 <MenuList style={{backgroundColor: 'black'}}>
@@ -30,7 +31,8 @@ function TweetOptions({tweetId}) {
                                 leftIcon={<Icon as={GoTrash} size="lg" style={{color: "red"}}/>}
                                 isDisabled={deleteLoading}
                                 style={{border: "none", color: "red", fontSize: "18px"}}
-                                onClick={() => {
+                                onClick={(e) => {
+                                    e.stopPropagation()
                                     handleClick()
                                 }}>Delete</Button>
                     </MenuItem>
