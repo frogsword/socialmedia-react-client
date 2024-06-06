@@ -1,9 +1,10 @@
 import {useContext, useEffect, useState} from "react";
-import {useNavigate} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import Tweet from "../components/Tweet";
 import "../styles/home-page.css";
 import {AuthContext} from "../context/auth-context.jsx";
 import PostTweet from "../components/PostTweet.jsx";
+import {Avatar} from "@chakra-ui/react";
 
 function Home({user}) {
     const navigate = useNavigate()
@@ -13,6 +14,7 @@ function Home({user}) {
 
     const [currUser, setCurrUser] = useState(user)
     const [tweets, setTweets] = useState([])
+    const [loading, setLoading] = useState(true)
 
     const getTweets = async () => {
         const response = await fetch("http://localhost:8080/api/tweets/all", {
@@ -23,6 +25,7 @@ function Home({user}) {
         const res = await response.json()
 
         setTweets(res)
+        setLoading(false)
     }
 
     useEffect(() => {
@@ -39,21 +42,35 @@ function Home({user}) {
         authenticate()
         getTweets()
     }, [])
-
-    return (
-        <div className='home-page'>
-            <div className='home-main'>
-                <PostTweet message={"Tweet Something..."}/>
-                {tweets.map((tweet) => {
-                    if (!tweet.deleted) {
-                        return (
-                            <Tweet key={tweet.id} tweet={tweet} currentUser={currUser} currentTime={currentTime}/>
-                        )
-                    }
-                })}
+    if (loading) {
+        return (
+            <div>loading...</div>
+        )
+    } else {
+        return (
+            <div className='home-page'>
+                <div style={{paddingTop: '10px'}}>
+                    <Link to={`/profile/${currUser.name}`} onClick={(e) => {
+                        e.stopPropagation()
+                        return navigate(`/profile/${currUser.name}`)
+                    }}>
+                        <Avatar size='lg' src={"data:image/jpeg;base64," + currUser.profilePicture}
+                                _hover={{filter: "brightness(80%)", transition: "0.25s"}}/>
+                    </Link>
+                </div>
+                <div className='home-main'>
+                    <PostTweet message={"Tweet Something..."}/>
+                    {tweets.map((tweet) => {
+                        if (!tweet.deleted) {
+                            return (
+                                <Tweet key={tweet.id} tweet={tweet} currentUser={currUser} currentTime={currentTime}/>
+                            )
+                        }
+                    })}
+                </div>
             </div>
-        </div>
-    )
+        )
+    }
 }
 
 export default Home
