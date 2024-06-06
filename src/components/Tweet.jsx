@@ -1,14 +1,18 @@
 import {Avatar, Button, Icon, Image, Modal, ModalContent, ModalOverlay, useDisclosure} from "@chakra-ui/react"
 import {Link, useNavigate} from "react-router-dom";
 import "../styles/tweet.css"
-import {useState} from "react";
+import {useContext, useState} from "react";
 import TweetOptions from "./TweetOptions.jsx";
 import {GoHeart, GoHeartFill} from "react-icons/go";
 import {FaRegComment} from "react-icons/fa";
+import {AuthContext} from "../context/auth-context.jsx";
 
-function Tweet({tweet, currentTime, currentUser}) {
+function Tweet({tweet, currentTime, style}) {
     const navigate = useNavigate()
     const {isOpen, onOpen, onClose} = useDisclosure()
+
+    const context = useContext(AuthContext);
+    const [currentUser, setCurrentUser] = useState(context.authenticatedUser)
 
     const currentUserIsAuthor = currentUser.id == tweet.userId
 
@@ -54,9 +58,10 @@ function Tweet({tweet, currentTime, currentUser}) {
     return (
         <div id={tweet.id} className="tweet-main" onClick={() => {
             navigateToThread(tweet.id)
+            context.setReloadTweets(!context.reloadTweets)
         }}>
 
-            <div className='tweet-left-column'>
+            <div className='tweet-left-column' style={{background: style}}>
                 <Link to={`/profile/${tweet.userName}`} onClick={(e) => {
                     e.stopPropagation()
                     return navigate(`/profile/${tweet.userName}`)

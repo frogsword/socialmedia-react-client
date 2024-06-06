@@ -4,6 +4,7 @@ export const AuthContext = createContext(null)
 
 export const AuthContextProvider = (props) => {
     const [authenticatedUser, setUser] = useState(null);
+    const [reloadTweets, setReloadTweets] = useState(false);
 
     const authenticateUser = async () => {
         const response = await fetch('http://localhost:8080/api/auth/authenticate', {
@@ -19,6 +20,6 @@ export const AuthContextProvider = (props) => {
         return res
     }
 
-    const contextValue = {authenticateUser, authenticatedUser}
+    const contextValue = {authenticateUser, authenticatedUser, setUser, reloadTweets, setReloadTweets}
     return <AuthContext.Provider value={contextValue}>{props.children}</AuthContext.Provider>
 }
